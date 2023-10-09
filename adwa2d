@@ -1,0 +1,120 @@
+-- Define your script variables
+local player = game:GetService("Players").LocalPlayer
+local playerUsername = player.Name
+
+local loadingScreen = Instance.new("ScreenGui")
+loadingScreen.Name = "LoadingScreen"
+loadingScreen.Parent = game:GetService("CoreGui")
+loadingScreen.IgnoreGuiInset = true -- Make sure it covers the whole screen
+
+local background = Instance.new("Frame")
+background.Name = "Background"
+background.Parent = loadingScreen
+background.BackgroundColor3 = Color3.new(0, 0, 0)
+background.BorderSizePixel = 0
+background.Position = UDim2.new(0, 0, 0, 0)
+background.Size = UDim2.new(1, 0, 1, 0) -- Cover the entire screen
+
+local title = Instance.new("TextLabel")
+title.Name = "Title"
+title.Parent = background
+title.BackgroundColor3 = Color3.new(0, 0, 0)
+title.BackgroundTransparency = 1
+title.Position = UDim2.new(0.5, -300, 0.45, -30) -- Centered vertically and slightly higher
+title.Size = UDim2.new(0, 600, 0, 100) -- Make it larger
+title.Font = Enum.Font.FredokaOne
+title.Text = "Maykill Scripts"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextScaled = true
+
+local subtitle = Instance.new("TextLabel")
+subtitle.Name = "Subtitle"
+subtitle.Parent = background
+subtitle.BackgroundColor3 = Color3.new(0, 0, 0)
+subtitle.BackgroundTransparency = 1
+subtitle.Position = UDim2.new(0.5, -300, 0.52, 0) -- Centered horizontally and aligned with "Maykill Scripts"
+subtitle.Size = UDim2.new(0, 600, 0, 80) -- Make it larger
+subtitle.Font = Enum.Font.FredokaOne
+subtitle.Text = ".gg/b4Qcgk3fXR"
+subtitle.TextColor3 = Color3.new(1, 1, 1)
+subtitle.TextSize = 48 -- Larger text size
+
+local loadingBarContainer = Instance.new("Frame")
+loadingBarContainer.Name = "LoadingBarContainer"
+loadingBarContainer.Parent = background
+loadingBarContainer.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+loadingBarContainer.BorderSizePixel = 0
+loadingBarContainer.Position = UDim2.new(0.5, -300, 0.75, 0) -- Centered horizontally and 25% from the bottom
+loadingBarContainer.Size = UDim2.new(0, 600, 0, 40) -- Make it larger
+
+-- Create rounded corners for both sides
+local loadingBarCorner = Instance.new("UICorner")
+loadingBarCorner.CornerRadius = UDim.new(0, 20) -- Adjust the radius as needed
+loadingBarCorner.Parent = loadingBarContainer
+
+local loadingBar = Instance.new("Frame")
+loadingBar.Name = "LoadingBar"
+loadingBar.Parent = loadingBarContainer
+loadingBar.BackgroundColor3 = Color3.new(0.38, 0, 0.58) -- Purple color
+loadingBar.BorderSizePixel = 0
+loadingBar.Position = UDim2.new(0, 0, 0, 0) -- Top left corner
+loadingBar.Size = UDim2.new(0, 0, 0, 40) -- Start with a zero width
+
+-- Create rounded corners for both sides of the loading bar
+local loadingBarCorner = Instance.new("UICorner")
+loadingBarCorner.CornerRadius = UDim.new(0, 20) -- Adjust the radius as needed
+loadingBarCorner.Parent = loadingBar
+
+local loadingText = Instance.new("TextLabel")
+loadingText.Name = "LoadingText"
+loadingText.Parent = loadingBarContainer
+loadingText.BackgroundColor3 = Color3.new(0, 0, 0)
+loadingText.BackgroundTransparency = 1
+loadingText.Position = UDim2.new(0.5, -300, 1.2, 0) -- Centered horizontally and under the loading bar
+loadingText.Size = UDim2.new(0, 600, 0, 80) -- Make it larger
+loadingText.Font = Enum.Font.FredokaOne
+loadingText.Text = "Loading..."
+loadingText.TextColor3 = Color3.new(1, 1, 1)
+loadingText.TextSize = 48 -- Larger text size
+
+-- Create rounded corners for both sides of the loading text container
+local loadingTextCorner = Instance.new("UICorner")
+loadingTextCorner.CornerRadius = UDim.new(0, 20) -- Adjust the radius as needed
+loadingTextCorner.Parent = loadingText
+
+local percentageText = Instance.new("TextLabel")
+percentageText.Name = "PercentageText"
+percentageText.Parent = loadingBar
+percentageText.BackgroundColor3 = Color3.new(0, 0, 0)
+percentageText.BackgroundTransparency = 1
+percentageText.Position = UDim2.new(0, 0, -1.5, 0) -- Directly above the loading bar
+percentageText.Size = UDim2.new(1, 0, 0, 40)
+percentageText.Font = Enum.Font.FredokaOne
+percentageText.Text = "0%"
+percentageText.TextColor3 = Color3.new(1, 1, 1)
+percentageText.TextSize = 48 -- Larger text size
+
+-- Simulate loading progress (replace this with your actual loading logic)
+local loadingProgress = 0
+local loadingSpeed = 1000
+
+
+local function updateLoadingBar()
+    while loadingProgress < 1 do
+        loadingProgress = math.min(loadingProgress + (1 / loadingSpeed), 1)
+        percentageText.Text = math.floor(loadingProgress * 100) .. "%"
+
+        local newSize = UDim2.new(loadingProgress, 0, 0, 40)
+        loadingBar:TweenSize(newSize, Enum.EasingDirection.Out, Enum.EasingStyle.Linear, 1, true)
+        wait(1 / loadingSpeed)
+    end
+
+    wait(2) -- Add a bit of delay at the end before removing the loading screen
+    -- Loading completed, remove the loading screen
+    loadingScreen:Destroy()
+
+    -- ... Rest of your code after loading is completed ...
+end
+
+-- Start the loading progress asynchronously using a coroutine
+coroutine.wrap(updateLoadingBar)()
